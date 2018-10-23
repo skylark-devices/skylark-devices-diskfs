@@ -1,0 +1,35 @@
+{
+  "name": "skylark-utils-filer",
+  "version": "0.9.1",
+  "description": "The filer features enhancement for skylark utils.",
+  "main": "-",
+  "scripts": {
+    "build": "sbundle build .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "homepage": "www.skylarkjs.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skylarkjs/skylark-utils-filer.git"
+  },
+  "keywords": [
+    "skylark",
+    "skylarkjs",
+    "javacript",
+    "library",
+    "utility",
+    "html5",
+    "file"
+  ],
+  "author": "Hudaokeji Co.,Ltd",
+  "license": "MIT",
+  "bugs": "https://github.com/skylarkjs/skylark/issues",
+  "dependencies": {},
+  "devDependencies": {
+    "skylark-langx": "https://github.com/skylarklangx/skylark-langx#master",
+    "skylark-utils-dom": "https://github.com/skylarkutils/skylark-utils-dom#master"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}
