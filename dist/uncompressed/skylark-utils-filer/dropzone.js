@@ -1,9 +1,10 @@
   define([
     "skylark-langx/Deferred",
+    "skylark-utils-dom/styler",
     "skylark-utils-dom/eventer",
     "./filer",
     "./webentry"
-],function(Deferred, eventer, filer, webentry){  /*
+],function(Deferred, styler, eventer, filer, webentry){  /*
      * Make the specified element to could accept HTML5 file drag and drop.
      * @param {HTMLElement} elm
      * @param {PlainObject} params

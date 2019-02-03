@@ -25,7 +25,7 @@ define([
 
             input.type = "file";
             input.style.position = "fixed";
-            nput.style.left = 0;
+            input.style.left = 0;
             input.style.top = 0;
             input.style.opacity = .001;
             document.body.appendChild(input);

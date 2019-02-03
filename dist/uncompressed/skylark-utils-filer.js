@@ -56,7 +56,7 @@
                 args.push(require(dep));
             })
 
-            module.exports = module.factory.apply(window, args);
+            module.exports = module.factory.apply(globals, args);
         }
         return module.exports;
     };
@@ -72,7 +72,7 @@
     var skylarkjs = require("skylark-langx/skylark");
 
     if (isCmd) {
-      exports = skylarkjs;
+      module.exports = skylarkjs;
     } else {
       globals.skylarkjs  = skylarkjs;
     }
@@ -183,10 +183,11 @@ define('skylark-utils-filer/download',[
 });
   define('skylark-utils-filer/dropzone',[
     "skylark-langx/Deferred",
+    "skylark-utils-dom/styler",
     "skylark-utils-dom/eventer",
     "./filer",
     "./webentry"
-],function(Deferred, eventer, filer, webentry){  /*
+],function(Deferred, styler, eventer, filer, webentry){  /*
      * Make the specified element to could accept HTML5 file drag and drop.
      * @param {HTMLElement} elm
      * @param {PlainObject} params
@@ -309,7 +310,7 @@ define('skylark-utils-filer/select',[
 
             input.type = "file";
             input.style.position = "fixed";
-            nput.style.left = 0;
+            input.style.left = 0;
             input.style.top = 0;
             input.style.opacity = .001;
             document.body.appendChild(input);
@@ -405,9 +406,11 @@ define('skylark-utils-filer/upload',[
 	"skylark-langx/types",
 	"skylark-langx/objects",
 	"skylark-langx/arrays",
+    "skylark-langx/Deferred",
 	"skylark-langx/Xhr",
 	"./filer"
-],function(types, objects, arrays, Xhr, filer){
+],function(types, objects, arrays, Deferred,Xhr, filer){
+
     function upload(params) {
         var xoptions = objects.mixin({
             contentRange: null, //
@@ -728,7 +731,7 @@ define('skylark-utils-filer/upload',[
                 initXHRData(o);
                 // Add progress listeners for this chunk upload:
                 //initProgressListener(o);
-                jqXHR = $.ajax(o).done(function(result, textStatus, jqXHR) {
+                jqXHR = ajax(o).done(function(result, textStatus, jqXHR) {
                         ub = getUploadedBytes(jqXHR) ||
                             (ub + o.chunkSize);
                         // Create a progress event if no final progress event
@@ -806,3 +809,4 @@ define('skylark-utils-filer', ['skylark-utils-filer/main'], function (main) { re
 
 
 },this);
+//# sourceMappingURL=sourcemaps/skylark-utils-filer.js.map

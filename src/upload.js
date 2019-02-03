@@ -2,9 +2,11 @@ define([
 	"skylark-langx/types",
 	"skylark-langx/objects",
 	"skylark-langx/arrays",
+    "skylark-langx/Deferred",
 	"skylark-langx/Xhr",
 	"./filer"
-],function(types, objects, arrays, Xhr, filer){
+],function(types, objects, arrays, Deferred,Xhr, filer){
+
     function upload(params) {
         var xoptions = objects.mixin({
             contentRange: null, //
@@ -325,7 +327,7 @@ define([
                 initXHRData(o);
                 // Add progress listeners for this chunk upload:
                 //initProgressListener(o);
-                jqXHR = $.ajax(o).done(function(result, textStatus, jqXHR) {
+                jqXHR = ajax(o).done(function(result, textStatus, jqXHR) {
                         ub = getUploadedBytes(jqXHR) ||
                             (ub + o.chunkSize);
                         // Create a progress event if no final progress event
