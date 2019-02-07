@@ -26,8 +26,8 @@
   "bugs": "https://github.com/skylarkjs/skylark/issues",
   "dependencies": {},
   "devDependencies": {
-    "skylark-langx": "https://github.com/skylarklangx/skylark-langx#master",
-    "skylark-utils-dom": "https://github.com/skylarkutils/skylark-utils-dom#master"
+    "skylark-langx": "git+https://github.com/skylarklangx/skylark-langx.git#master",
+    "skylark-utils-dom": "git+https://github.com/skylarkutils/skylark-utils-dom.git#master"
   },
   "engines": {
     "node": ">=0.8.0"

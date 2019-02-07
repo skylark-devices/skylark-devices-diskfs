@@ -37,11 +37,16 @@
                 deps: deps.map(function(dep){
                   return absolute(dep,id);
                 }),
+                resolved: false,
                 exports: null
             };
             require(id);
         } else {
-            map[id] = factory;
+            map[id] = {
+                factory : null,
+                resolved : true,
+                exports : factory
+            };
         }
     };
     require = globals.require = function(id) {
@@ -49,14 +54,15 @@
             throw new Error('Module ' + id + ' has not been defined');
         }
         var module = map[id];
-        if (!module.exports) {
+        if (!module.resolved) {
             var args = [];
 
             module.deps.forEach(function(dep){
                 args.push(require(dep));
             })
 
-            module.exports = module.factory.apply(globals, args);
+            module.exports = module.factory.apply(globals, args) || null;
+            module.resolved = true;
         }
         return module.exports;
     };
@@ -6781,12 +6787,13 @@ define('skylark-utils-dom/eventer',[
     return filer.webentry = webentry;
 });
   define('skylark-utils-filer/dropzone',[
+    "skylark-langx/arrays",
     "skylark-langx/Deferred",
     "skylark-utils-dom/styler",
     "skylark-utils-dom/eventer",
     "./filer",
     "./webentry"
-],function(Deferred, styler, eventer, filer, webentry){  /*
+],function(arrays,Deferred, styler, eventer, filer, webentry){  /*
      * Make the specified element to could accept HTML5 file drag and drop.
      * @param {HTMLElement} elm
      * @param {PlainObject} params
@@ -6829,7 +6836,7 @@ define('skylark-utils-dom/eventer',[
                     if (items && items.length && (items[0].webkitGetAsEntry ||
                             items[0].getAsEntry)) {
                         webentry.all(
-                            langx.map(items, function(item) {
+                            arrays.map(items, function(item) {
                                 if (item.webkitGetAsEntry) {
                                     return item.webkitGetAsEntry();
                                 }
