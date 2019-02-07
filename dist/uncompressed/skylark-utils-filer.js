@@ -135,9 +135,10 @@ define('skylark-utils-filer/download',[
 });
 
  define('skylark-utils-filer/webentry',[
+    "skylark-langx/arrays",
     "skylark-langx/Deferred",
     "./filer"
-],function(Deferred, filer){
+],function(arrays,Deferred, filer){
    var webentry = (function() {
         function one(entry, path) {
             var d = new Deferred(),
@@ -171,7 +172,7 @@ define('skylark-utils-filer/download',[
 
         function all(entries, path) {
             return Deferred.all(
-                langx.map(entries, function(entry) {
+                arrays.map(entries, function(entry) {
                     return one(entry, path);
                 })
             ).then(function() {
