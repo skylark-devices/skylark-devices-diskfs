@@ -3,7 +3,8 @@
     "skylark-langx/Deferred",
     "./filer"
 ],function(arrays,Deferred, filer){
-   var webentry = (function() {
+    var concat = Array.prototype.concat;
+    var webentry = (function() {
         function one(entry, path) {
             var d = new Deferred(),
                 onError = function(e) {
