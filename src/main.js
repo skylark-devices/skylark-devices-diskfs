@@ -7,6 +7,7 @@ define([
 	"./read",
 	"./select",
 	"./upload",
+	"./uploader",
 	"./webentry"
 ],function(filer){
 	return filer;
