@@ -3,10 +3,10 @@ define([
     "skylark-utils-dom/eventer",
     "skylark-utils-dom/query",
     "./dropzone",
-    "./pasteZone",
+    "./pastezone",
     "./picker",
     "./upload"
-],function (langx,eventer,$,dropzone,pasteZone,picker,upload) {
+],function (langx,eventer,$,dropzone,pastezone,picker,upload) {
     'use strict';
 
     var Deferred = langx.Deferred;
@@ -679,19 +679,19 @@ define([
             
             if (options.picker) {
                 if (!(options.picker instanceof $)) {
-                    options.picker = $(options.picker);
+                    options.picker = $(options.picker,this._elm);
                 }                
             }
 
             if (options.dropZone) {
                 if (!(options.dropZone instanceof $)) {
-                    options.dropZone = $(options.dropZone);
+                    options.dropZone = $(options.dropZone,this._elm);
                 }
             }
 
             if (options.pasteZone) {
                 if (!(options.pasteZone instanceof $)) {
-                    options.pasteZone = $(options.pasteZone);
+                    options.pasteZone = $(options.pasteZone,this._elm);
                 }                
             }
         },

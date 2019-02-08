@@ -801,49 +801,15 @@ define('skylark-utils-filer/upload',[
 
 	return filer.upload = upload;	
 });
-define('skylark-utils-filer/pasteZone',[
-    "skylark-langx/objects",
-    "skylark-utils-dom/eventer",
-    "./filer"
-],function(objects, eventer, filer){
-    function pastezone(elm, params) {
-        params = params || {};
-        var hoverClass = params.hoverClass || "pastezone",
-            pastedCallback = params.pasted;
-
-        eventer.on(elm, "paste", function(e) {
-            var items = e.originalEvent && e.originalEvent.clipboardData &&
-                e.originalEvent.clipboardData.items,
-                files = [];
-            if (items && items.length) {
-                objects.each(items, function(index, item) {
-                    var file = item.getAsFile && item.getAsFile();
-                    if (file) {
-                        files.push(file);
-                    }
-                });
-            }
-            if (pastedCallback && files.length) {
-                pastedCallback(files);
-            }
-        });
-
-        return this;
-    }
-
-    return filer.pastezone = pastezone;
-
-});
-
 define('skylark-utils-filer/uploader',[
     "skylark-langx/langx",
     "skylark-utils-dom/eventer",
     "skylark-utils-dom/query",
     "./dropzone",
-    "./pasteZone",
+    "./pastezone",
     "./picker",
     "./upload"
-],function (langx,eventer,$,dropzone,pasteZone,picker,upload) {
+],function (langx,eventer,$,dropzone,pastezone,picker,upload) {
     'use strict';
 
     var Deferred = langx.Deferred;
@@ -1516,19 +1482,19 @@ define('skylark-utils-filer/uploader',[
             
             if (options.picker) {
                 if (!(options.picker instanceof $)) {
-                    options.picker = $(options.picker);
+                    options.picker = $(options.picker,this._elm);
                 }                
             }
 
             if (options.dropZone) {
                 if (!(options.dropZone instanceof $)) {
-                    options.dropZone = $(options.dropZone);
+                    options.dropZone = $(options.dropZone,this._elm);
                 }
             }
 
             if (options.pasteZone) {
                 if (!(options.pasteZone instanceof $)) {
-                    options.pasteZone = $(options.pasteZone);
+                    options.pasteZone = $(options.pasteZone,this._elm);
                 }                
             }
         },

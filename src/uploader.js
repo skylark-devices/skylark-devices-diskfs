@@ -3,10 +3,10 @@ define([
     "skylark-utils-dom/eventer",
     "skylark-utils-dom/query",
     "./dropzone",
-    "./pasteZone",
+    "./pastezone",
     "./picker",
     "./upload"
-],function (langx,eventer,$,dropzone,pasteZone,picker,upload) {
+],function (langx,eventer,$,dropzone,pastezone,picker,upload) {
     'use strict';
 
     var Deferred = langx.Deferred;
