@@ -9957,11 +9957,12 @@ define('skylark-utils-filer/uploader',[
     "skylark-langx/langx",
     "skylark-utils-dom/eventer",
     "skylark-utils-dom/query",
+    "./filer",
     "./dropzone",
     "./pastezone",
     "./picker",
     "./upload"
-],function (langx,eventer,$,dropzone,pastezone,picker,upload) {
+],function (langx,eventer,$,filer,dropzone,pastezone,picker,upload) {
     'use strict';
 
     var Deferred = langx.Deferred;
@@ -10727,9 +10728,10 @@ define('skylark-utils-filer/uploader',[
                 options[typ].call(fuInst._elm,evt,data);
             }
         });
+        return fuInst;
     }
 
-    return uploader;
+    return filer.uploader = uploader;
 
 });
 
