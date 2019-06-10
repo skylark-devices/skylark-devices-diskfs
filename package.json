@@ -1,5 +1,5 @@
 {
-  "name": "skylark-utils-filer",
+  "name": "skylark-storages-diskfs",
   "version": "0.9.1",
   "description": "The filer features enhancement for skylark utils.",
   "main": "-",
@@ -10,7 +10,7 @@
   "homepage": "www.skylarkjs.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skylarkjs/skylark-utils-filer.git"
+    "url": "git+https://github.com/skylarkjs/skylark-storages-diskfs.git"
   },
   "keywords": [
     "skylark",
