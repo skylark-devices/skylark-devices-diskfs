@@ -1,9 +1,9 @@
 define([
     "skylark-langx/objects",
     "skylark-utils-dom/eventer",
-    "./filer",
+    "./diskfs",
     "./select",
-],function(objects, eventer, filer, select){
+],function(objects, eventer, diskfs, select){
     /*
      * Make the specified element to pop-up the file selection dialog box when clicked , and read the contents the files selected from client file system by user.
      * @param {HTMLElement} elm
@@ -17,7 +17,7 @@ define([
         return this;
     }
 
-    return filer.picker = picker;
+    return diskfs.picker = picker;
 
 });
 

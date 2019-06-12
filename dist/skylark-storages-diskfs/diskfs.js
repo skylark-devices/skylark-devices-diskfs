@@ -5,5 +5,5 @@
  * @link www.skylarkjs.org
  * @license MIT
  */
-define(["skylark-langx/skylark"],function(n){var r=function(){return r};return n.filer=r});
-//# sourceMappingURL=sourcemaps/filer.js.map
+define(["skylark-langx/skylark"],function(n){var r=function(){return r};return n.attach("storages.diskfs",r)});
+//# sourceMappingURL=sourcemaps/diskfs.js.map

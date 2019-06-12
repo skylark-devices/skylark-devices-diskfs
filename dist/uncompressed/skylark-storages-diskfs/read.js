@@ -1,7 +1,7 @@
 define([
     "skylark-langx/Deferred",
-    "./filer"
-],function(Deferred, filer){
+    "./diskfs"
+],function(Deferred, diskfs){
 
     function readFile(file, params) {
         params = params || {};
@@ -33,6 +33,6 @@ define([
         return d.promise;
     }
 
-    return filer.read = filer.readFile = readFile;
+    return diskfs.read = diskfs.readFile = readFile;
     
 });

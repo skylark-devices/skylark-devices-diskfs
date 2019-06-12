@@ -1,6 +1,6 @@
 define([
-    "./filer"
-],function(filer){
+    "./diskfs"
+],function(diskfs){
     var fileInput,
         fileInputForm,
         fileSelected,
@@ -49,6 +49,6 @@ define([
         fileInput.click();
     }
 
-    return filer.select = select;
+    return diskfs.select = select;
 });
 

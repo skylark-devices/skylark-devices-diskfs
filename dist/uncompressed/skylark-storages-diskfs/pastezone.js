@@ -1,8 +1,8 @@
 define([
     "skylark-langx/objects",
     "skylark-utils-dom/eventer",
-    "./filer"
-],function(objects, eventer, filer){
+    "./diskfs"
+],function(objects, eventer, diskfs){
     function pastezone(elm, params) {
         params = params || {};
         var hoverClass = params.hoverClass || "pastezone",
@@ -28,6 +28,6 @@ define([
         return this;
     }
 
-    return filer.pastezone = pastezone;
+    return diskfs.pastezone = pastezone;
 
 });

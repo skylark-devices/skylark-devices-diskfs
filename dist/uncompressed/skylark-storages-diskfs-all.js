@@ -115,7 +115,7 @@ define('skylark-langx/skylark',[
     return skylark;
 });
 
-define('skylark-storages-diskfs/filer',[
+define('skylark-storages-diskfs/diskfs',[
     "skylark-langx/skylark"
 ], function(skylark) {
 
@@ -132,15 +132,15 @@ define('skylark-storages-diskfs/filer',[
     }
 
 
-    var filer = function() {
-        return filer;
+    var diskfs = function() {
+        return diskfs;
     };
 
-    return skylark.filer = filer;
+    return skylark.attach("storages.diskfs", diskfs);
 });
 define('skylark-storages-diskfs/download',[
-    "./filer"
-],function(filer){
+    "./diskfs"
+],function(diskfs){
 
     function downloadFile(data, name) {
         if (window.navigator.msSaveBlob) {
@@ -159,7 +159,7 @@ define('skylark-storages-diskfs/download',[
         }
     }
 
-    return filer.downlad = downloadFile;
+    return diskfs.downlad = downloadFile;
 
 });
 
@@ -6980,8 +6980,8 @@ define('skylark-utils-dom/eventer',[
  define('skylark-storages-diskfs/webentry',[
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
-    "./filer"
-],function(arrays,Deferred, filer){
+    "./diskfs"
+],function(arrays,Deferred, diskfs){
     var concat = Array.prototype.concat;
     var webentry = (function() {
         function one(entry, path) {
@@ -7030,16 +7030,16 @@ define('skylark-utils-dom/eventer',[
         };
     })();
 
-    return filer.webentry = webentry;
+    return diskfs.webentry = webentry;
 });
   define('skylark-storages-diskfs/dropzone',[
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
     "skylark-utils-dom/styler",
     "skylark-utils-dom/eventer",
-    "./filer",
+    "./diskfs",
     "./webentry"
-],function(arrays,Deferred, styler, eventer, filer, webentry){  /*
+],function(arrays,Deferred, styler, eventer, diskfs, webentry){  /*
      * Make the specified element to could accept HTML5 file drag and drop.
      * @param {HTMLElement} elm
      * @param {PlainObject} params
@@ -7099,13 +7099,13 @@ define('skylark-utils-dom/eventer',[
         return this;
     }
 
-     return filer.dropzone = dropzone;
+     return diskfs.dropzone = dropzone;
 });
 define('skylark-storages-diskfs/pastezone',[
     "skylark-langx/objects",
     "skylark-utils-dom/eventer",
-    "./filer"
-],function(objects, eventer, filer){
+    "./diskfs"
+],function(objects, eventer, diskfs){
     function pastezone(elm, params) {
         params = params || {};
         var hoverClass = params.hoverClass || "pastezone",
@@ -7131,13 +7131,13 @@ define('skylark-storages-diskfs/pastezone',[
         return this;
     }
 
-    return filer.pastezone = pastezone;
+    return diskfs.pastezone = pastezone;
 
 });
 
 define('skylark-storages-diskfs/select',[
-    "./filer"
-],function(filer){
+    "./diskfs"
+],function(diskfs){
     var fileInput,
         fileInputForm,
         fileSelected,
@@ -7186,16 +7186,16 @@ define('skylark-storages-diskfs/select',[
         fileInput.click();
     }
 
-    return filer.select = select;
+    return diskfs.select = select;
 });
 
 
 define('skylark-storages-diskfs/picker',[
     "skylark-langx/objects",
     "skylark-utils-dom/eventer",
-    "./filer",
+    "./diskfs",
     "./select",
-],function(objects, eventer, filer, select){
+],function(objects, eventer, diskfs, select){
     /*
      * Make the specified element to pop-up the file selection dialog box when clicked , and read the contents the files selected from client file system by user.
      * @param {HTMLElement} elm
@@ -7209,7 +7209,7 @@ define('skylark-storages-diskfs/picker',[
         return this;
     }
 
-    return filer.picker = picker;
+    return diskfs.picker = picker;
 
 });
 
@@ -7217,8 +7217,8 @@ define('skylark-storages-diskfs/picker',[
 
 define('skylark-storages-diskfs/read',[
     "skylark-langx/Deferred",
-    "./filer"
-],function(Deferred, filer){
+    "./diskfs"
+],function(Deferred, diskfs){
 
     function readFile(file, params) {
         params = params || {};
@@ -7250,7 +7250,7 @@ define('skylark-storages-diskfs/read',[
         return d.promise;
     }
 
-    return filer.read = filer.readFile = readFile;
+    return diskfs.read = diskfs.readFile = readFile;
     
 });
 
@@ -7260,8 +7260,8 @@ define('skylark-storages-diskfs/upload',[
 	"skylark-langx/arrays",
     "skylark-langx/Deferred",
 	"skylark-langx/Xhr",
-	"./filer"
-],function(types, objects, arrays, Deferred,Xhr, filer){
+	"./diskfs"
+],function(types, objects, arrays, Deferred,Xhr, diskfs){
 
     function upload(params) {
         var xoptions = objects.mixin({
@@ -7642,7 +7642,7 @@ define('skylark-storages-diskfs/upload',[
         return jqXhr;
     }
 
-	return filer.upload = upload;	
+	return diskfs.upload = upload;	
 });
 define('skylark-utils-dom/geom',[
     "./dom",
@@ -10207,12 +10207,12 @@ define('skylark-storages-diskfs/uploader',[
     "skylark-langx/langx",
     "skylark-utils-dom/eventer",
     "skylark-utils-dom/query",
-    "./filer",
+    "./diskfs",
     "./dropzone",
     "./pastezone",
     "./picker",
     "./upload"
-],function (langx,eventer,$,filer,dropzone,pastezone,picker,upload) {
+],function (langx,eventer,$,diskfs,dropzone,pastezone,picker,upload) {
     'use strict';
 
     var Deferred = langx.Deferred;
@@ -10981,12 +10981,12 @@ define('skylark-storages-diskfs/uploader',[
         return fuInst;
     }
 
-    return filer.uploader = uploader;
+    return diskfs.uploader = uploader;
 
 });
 
 define('skylark-storages-diskfs/main',[
-	"./filer",
+	"./diskfs",
 	"./download",
 	"./dropzone",
 	"./pastezone",
@@ -10996,8 +10996,8 @@ define('skylark-storages-diskfs/main',[
 	"./upload",
 	"./uploader",
 	"./webentry"
-],function(filer){
-	return filer;
+],function(diskfs){
+	return diskfs;
 });
 define('skylark-storages-diskfs', ['skylark-storages-diskfs/main'], function (main) { return main; });
 

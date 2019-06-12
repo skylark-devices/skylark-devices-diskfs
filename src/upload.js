@@ -4,8 +4,8 @@ define([
 	"skylark-langx/arrays",
     "skylark-langx/Deferred",
 	"skylark-langx/Xhr",
-	"./filer"
-],function(types, objects, arrays, Deferred,Xhr, filer){
+	"./diskfs"
+],function(types, objects, arrays, Deferred,Xhr, diskfs){
 
     function upload(params) {
         var xoptions = objects.mixin({
@@ -386,5 +386,5 @@ define([
         return jqXhr;
     }
 
-	return filer.upload = upload;	
+	return diskfs.upload = upload;	
 })

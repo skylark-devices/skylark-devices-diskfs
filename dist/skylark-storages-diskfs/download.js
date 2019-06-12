@@ -5,5 +5,5 @@
  * @link www.skylarkjs.org
  * @license MIT
  */
-define(["./filer"],function(e){return e.downlad=function(e,t){if(window.navigator.msSaveBlob)types.isString(e)&&(e=dataURItoBlob(e)),window.navigator.msSaveBlob(e,t);else{var n=document.createElement("a");e instanceof Blob&&(e=URL.createObjectURL(e)),n.href=e,n.setAttribute("download",t||"noname"),n.dispatchEvent(new CustomEvent("click"))}}});
+define(["./diskfs"],function(e){return e.downlad=function(e,t){if(window.navigator.msSaveBlob)types.isString(e)&&(e=dataURItoBlob(e)),window.navigator.msSaveBlob(e,t);else{var n=document.createElement("a");e instanceof Blob&&(e=URL.createObjectURL(e)),n.href=e,n.setAttribute("download",t||"noname"),n.dispatchEvent(new CustomEvent("click"))}}});
 //# sourceMappingURL=sourcemaps/download.js.map

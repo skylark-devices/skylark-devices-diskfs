@@ -5,5 +5,5 @@
  * @link www.skylarkjs.org
  * @license MIT
  */
-define(["skylark-langx/objects","skylark-utils-dom/eventer","./filer","./select"],function(e,n,t,r){return t.picker=function(e,t){return n.on(e,"click",function(e){e.preventDefault(),r(t)}),this}});
+define(["skylark-langx/objects","skylark-utils-dom/eventer","./diskfs","./select"],function(e,n,t,i){return t.picker=function(e,t){return n.on(e,"click",function(e){e.preventDefault(),i(t)}),this}});
 //# sourceMappingURL=sourcemaps/picker.js.map

@@ -3,9 +3,9 @@
     "skylark-langx/Deferred",
     "skylark-utils-dom/styler",
     "skylark-utils-dom/eventer",
-    "./filer",
+    "./diskfs",
     "./webentry"
-],function(arrays,Deferred, styler, eventer, filer, webentry){  /*
+],function(arrays,Deferred, styler, eventer, diskfs, webentry){  /*
      * Make the specified element to could accept HTML5 file drag and drop.
      * @param {HTMLElement} elm
      * @param {PlainObject} params
@@ -65,5 +65,5 @@
         return this;
     }
 
-     return filer.dropzone = dropzone;
+     return diskfs.dropzone = dropzone;
 });

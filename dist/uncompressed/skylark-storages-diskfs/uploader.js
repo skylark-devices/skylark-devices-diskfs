@@ -2,12 +2,12 @@ define([
     "skylark-langx/langx",
     "skylark-utils-dom/eventer",
     "skylark-utils-dom/query",
-    "./filer",
+    "./diskfs",
     "./dropzone",
     "./pastezone",
     "./picker",
     "./upload"
-],function (langx,eventer,$,filer,dropzone,pastezone,picker,upload) {
+],function (langx,eventer,$,diskfs,dropzone,pastezone,picker,upload) {
     'use strict';
 
     var Deferred = langx.Deferred;
@@ -776,6 +776,6 @@ define([
         return fuInst;
     }
 
-    return filer.uploader = uploader;
+    return diskfs.uploader = uploader;
 
 });

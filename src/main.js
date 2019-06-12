@@ -1,5 +1,5 @@
 define([
-	"./filer",
+	"./diskfs",
 	"./download",
 	"./dropzone",
 	"./pastezone",
@@ -9,6 +9,6 @@ define([
 	"./upload",
 	"./uploader",
 	"./webentry"
-],function(filer){
-	return filer;
+],function(diskfs){
+	return diskfs;
 });

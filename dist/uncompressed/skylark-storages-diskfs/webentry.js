@@ -1,8 +1,8 @@
  define([
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
-    "./filer"
-],function(arrays,Deferred, filer){
+    "./diskfs"
+],function(arrays,Deferred, diskfs){
     var concat = Array.prototype.concat;
     var webentry = (function() {
         function one(entry, path) {
@@ -51,5 +51,5 @@
         };
     })();
 
-    return filer.webentry = webentry;
+    return diskfs.webentry = webentry;
 });

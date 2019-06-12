@@ -1,6 +1,6 @@
 define([
-    "./filer"
-],function(filer){
+    "./diskfs"
+],function(diskfs){
 
     function downloadFile(data, name) {
         if (window.navigator.msSaveBlob) {
@@ -19,6 +19,6 @@ define([
         }
     }
 
-    return filer.downlad = downloadFile;
+    return diskfs.downlad = downloadFile;
 
 });

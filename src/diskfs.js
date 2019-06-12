@@ -15,9 +15,9 @@ define([
     }
 
 
-    var filer = function() {
-        return filer;
+    var diskfs = function() {
+        return diskfs;
     };
 
-    return skylark.filer = filer;
+    return skylark.attach("storages.diskfs", diskfs);
 });
