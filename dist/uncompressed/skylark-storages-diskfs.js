@@ -192,8 +192,8 @@ define('skylark-storages-diskfs/download',[
   define('skylark-storages-diskfs/dropzone',[
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
-    "skylark-utils-dom/styler",
-    "skylark-utils-dom/eventer",
+    "skylark-domx-styler",
+    "skylark-domx-eventer",
     "./diskfs",
     "./webentry"
 ],function(arrays,Deferred, styler, eventer, diskfs, webentry){  /*
@@ -260,7 +260,7 @@ define('skylark-storages-diskfs/download',[
 });
 define('skylark-storages-diskfs/pastezone',[
     "skylark-langx/objects",
-    "skylark-utils-dom/eventer",
+    "skylark-domx-eventer",
     "./diskfs"
 ],function(objects, eventer, diskfs){
     function pastezone(elm, params) {
@@ -349,7 +349,7 @@ define('skylark-storages-diskfs/select',[
 
 define('skylark-storages-diskfs/picker',[
     "skylark-langx/objects",
-    "skylark-utils-dom/eventer",
+    "skylark-domx-eventer",
     "./diskfs",
     "./select",
 ],function(objects, eventer, diskfs, select){
@@ -803,8 +803,8 @@ define('skylark-storages-diskfs/upload',[
 });
 define('skylark-storages-diskfs/uploader',[
     "skylark-langx/langx",
-    "skylark-utils-dom/eventer",
-    "skylark-utils-dom/query",
+    "skylark-domx-eventer",
+    "skylark-domx-query",
     "./diskfs",
     "./dropzone",
     "./pastezone",

@@ -1,8 +1,8 @@
   define([
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
-    "skylark-utils-dom/styler",
-    "skylark-utils-dom/eventer",
+    "skylark-domx-styler",
+    "skylark-domx-eventer",
     "./diskfs",
     "./webentry"
 ],function(arrays,Deferred, styler, eventer, diskfs, webentry){  /*

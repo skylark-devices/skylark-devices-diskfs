@@ -1,6 +1,6 @@
 define([
     "skylark-langx/objects",
-    "skylark-utils-dom/eventer",
+    "skylark-domx-eventer",
     "./diskfs",
     "./select",
 ],function(objects, eventer, diskfs, select){

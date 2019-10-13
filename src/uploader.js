@@ -1,7 +1,7 @@
 define([
     "skylark-langx/langx",
-    "skylark-utils-dom/eventer",
-    "skylark-utils-dom/query",
+    "skylark-domx-eventer",
+    "skylark-domx-query",
     "./diskfs",
     "./dropzone",
     "./pastezone",

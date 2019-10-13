@@ -1,6 +1,6 @@
 define([
     "skylark-langx/objects",
-    "skylark-utils-dom/eventer",
+    "skylark-domx-eventer",
     "./diskfs"
 ],function(objects, eventer, diskfs){
     function pastezone(elm, params) {
