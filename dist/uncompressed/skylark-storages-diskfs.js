@@ -110,8 +110,9 @@ define('skylark-storages-diskfs/diskfs',[
     return skylark.attach("storages.diskfs", diskfs);
 });
 define('skylark-storages-diskfs/download',[
+    "skylark-langx/types",
     "./diskfs"
-],function(diskfs){
+],function(types,diskfs){
 
     function downloadFile(data, name) {
         if (window.navigator.msSaveBlob) {
@@ -135,7 +136,7 @@ define('skylark-storages-diskfs/download',[
 });
 
 define('skylark-storages-diskfs/read',[
-    "skylark-langx/Deferred",
+    "skylark-langx-async/Deferred",
     "./diskfs"
 ],function(Deferred, diskfs){
 
@@ -173,6 +174,37 @@ define('skylark-storages-diskfs/read',[
     
 });
 
+define('skylark-storages-diskfs/readImage',[
+    "skylark-langx/Deferred",
+    "./diskfs",
+    "./read"
+],function(Deferred, diskfs,read){
+
+	function readImage(fileObj) {
+        var d = new Deferred,
+	    	img = new Image();
+
+	    img.onload = function() {
+	      d.resolve(img);
+	    };
+	    img.onerror = function(e) {
+	      d.reject(e);
+	    };
+
+	    read(fileObj,{
+	    	asDataUrl : true
+	    }).then(function(dataUrl){
+	        img.src = dataUrl;
+	    }).catch(function(e){
+	    	d.reject(e);
+	    });
+
+	    return d.promise;
+	}
+
+	return diskfs.readImage = readImage;
+
+});
 define('skylark-storages-diskfs/select',[
     "./diskfs"
 ],function(diskfs){
@@ -287,6 +319,7 @@ define('skylark-storages-diskfs/main',[
 	"./diskfs",
 	"./download",
 	"./read",
+	"./readImage",
 	"./select",
 	"./webentry"
 ],function(diskfs){
