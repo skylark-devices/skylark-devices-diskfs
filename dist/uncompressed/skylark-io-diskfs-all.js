@@ -1,5 +1,5 @@
 /**
- * skylark-storages-diskfs - The filer features enhancement for skylark utils.
+ * skylark-io-diskfs - The filer features enhancement for skylark utils.
  * @author Hudaokeji Co.,Ltd
  * @version v0.9.1
  * @link www.skylarkjs.org
@@ -75,7 +75,7 @@
   factory(define,require);
 
   if (!isAmd) {
-    var skylarkjs = require("skylark-langx/skylark");
+    var skylarkjs = require("skylark-langx-ns");
 
     if (isCmd) {
       module.exports = skylarkjs;
@@ -128,7 +128,7 @@ define('skylark-langx/skylark',[
 	return ns;
 });
 
-define('skylark-storages-diskfs/diskfs',[
+define('skylark-io-diskfs/diskfs',[
     "skylark-langx/skylark"
 ], function(skylark) {
 
@@ -154,7 +154,8 @@ define('skylark-storages-diskfs/diskfs',[
 define('skylark-langx-types/types',[
     "skylark-langx-ns"
 ],function(skylark){
-    var toString = {}.toString;
+    var nativeIsArray = Array.isArray, 
+        toString = {}.toString;
     
     var type = (function() {
         var class2type = {};
@@ -170,9 +171,10 @@ define('skylark-langx-types/types',[
         };
     })();
 
-    function isArray(object) {
+ 
+    var  isArray = nativeIsArray || function(obj) {
         return object && object.constructor === Array;
-    }
+    };
 
 
     /**
@@ -215,7 +217,8 @@ define('skylark-langx-types/types',[
      * // => false
      */
     function isBoolean(obj) {
-        return typeof(obj) === "boolean";
+       return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
+       //return typeof(obj) === "boolean";
     }
 
     function isDefined(obj) {
@@ -225,6 +228,11 @@ define('skylark-langx-types/types',[
     function isDocument(obj) {
         return obj != null && obj.nodeType == obj.DOCUMENT_NODE;
     }
+
+   // Is a given value a DOM element?
+    function isElement(obj) {
+        return !!(obj && obj.nodeType === 1);
+    }   
 
     function isEmptyObject(obj) {
         var name;
@@ -254,6 +262,8 @@ define('skylark-langx-types/types',[
         return type(value) == "function";
     }
 
+
+
     function isHtmlNode(obj) {
         return obj && obj.nodeType; // obj instanceof Node; //Consider the elements in IFRAME
     }
@@ -277,8 +287,8 @@ define('skylark-langx-types/types',[
         }
     }
 
-    function isNull(value) {
-      return type(value) === "null";
+    function isNull(obj) {
+        return obj === null;
     }
 
     function isNumber(obj) {
@@ -286,7 +296,9 @@ define('skylark-langx-types/types',[
     }
 
     function isObject(obj) {
-        return type(obj) == "object";
+        var type = typeof obj;
+        return type === 'function' || type === 'object' && !!obj;        
+        //return type(obj) == "object";
     }
 
     function isPlainObject(obj) {
@@ -329,8 +341,9 @@ define('skylark-langx-types/types',[
         (isObjectLike(value) && objectToString.call(value) == symbolTag);
     }
 
-    function isUndefined(value) {
-      return value === undefined
+    // Is a given variable undefined?
+    function isUndefined(obj) {
+        return obj === void 0;
     }
 
     return skylark.attach("langx.types",{
@@ -345,6 +358,8 @@ define('skylark-langx-types/types',[
 
         isDocument: isDocument,
 
+        isElement,
+
         isEmpty : isEmptyObject,
 
         isEmptyObject: isEmptyObject,
@@ -353,7 +368,12 @@ define('skylark-langx-types/types',[
 
         isHtmlNode: isHtmlNode,
 
+        isNaN : function (obj) {
+            return isNaN(obj);
+        },
+
         isNull: isNull,
+
 
         isNumber: isNumber,
 
@@ -389,7 +409,7 @@ define('skylark-langx/types',[
 ],function(types){
     return types;
 });
-define('skylark-storages-diskfs/download',[
+define('skylark-io-diskfs/download',[
     "skylark-langx/types",
     "./diskfs"
 ],function(types,diskfs){
@@ -1062,8 +1082,9 @@ define('skylark-langx-arrays/arrays',[
   "skylark-langx-types",
   "skylark-langx-objects"
 ],function(skylark,types,objects){
-	var filter = Array.prototype.filter,
-		isArrayLike = types.isArrayLike;
+  var filter = Array.prototype.filter,
+      find = Array.prototype.find,
+    isArrayLike = types.isArrayLike;
 
     /**
      * The base implementation of `_.findIndex` and `_.findLastIndex` without
@@ -1246,6 +1267,10 @@ define('skylark-langx-arrays/arrays',[
         })
     }
 
+    function find2(array,func) {
+      return find.call(array,func);
+    }
+
     return skylark.attach("langx.arrays",{
         baseFindIndex: baseFindIndex,
 
@@ -1262,6 +1287,8 @@ define('skylark-langx-arrays/arrays',[
         },
 
         filter : filter2,
+
+        find : find2,
         
         flatten: flatten,
 
@@ -1358,76 +1385,133 @@ define('skylark-langx-funcs/funcs',[
         };
     })();
 
-  var templateSettings = {
-    evaluate: /<%([\s\S]+?)%>/g,
-    interpolate: /<%=([\s\S]+?)%>/g,
-    escape: /<%-([\s\S]+?)%>/g
-  };
 
-
-  function template(text, settings, oldSettings) {
-    if (!settings && oldSettings) settings = oldSettings;
-    settings = objects.defaults({}, settings,templateSettings);
-
-    // Combine delimiters into one regular expression via alternation.
-    var matcher = RegExp([
-      (settings.escape || noMatch).source,
-      (settings.interpolate || noMatch).source,
-      (settings.evaluate || noMatch).source
-    ].join('|') + '|$', 'g');
-
-    // Compile the template source, escaping string literals appropriately.
-    var index = 0;
-    var source = "__p+='";
-    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
-      source += text.slice(index, offset).replace(escapeRegExp, escapeChar);
-      index = offset + match.length;
-
-      if (escape) {
-        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
-      } else if (interpolate) {
-        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
-      } else if (evaluate) {
-        source += "';\n" + evaluate + "\n__p+='";
-      }
-
-      // Adobe VMs need the match returned to produce the correct offset.
-      return match;
-    });
-    source += "';\n";
-
-    // If a variable is not specified, place data values in local scope.
-    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
-
-    source = "var __t,__p='',__j=Array.prototype.join," +
-      "print=function(){__p+=__j.call(arguments,'');};\n" +
-      source + 'return __p;\n';
-
-    var render;
-    try {
-      render = new Function(settings.variable || 'obj', '_', source);
-    } catch (e) {
-      e.source = source;
-      throw e;
-    }
-
-    var template = function(data) {
-      return render.call(this, data, _);
+    // By default, Underscore uses ERB-style template delimiters, change the
+    // following template settings to use alternative delimiters.
+    var templateSettings = {
+        evaluate: /<%([\s\S]+?)%>/g,
+        interpolate: /<%=([\s\S]+?)%>/g,
+        escape: /<%-([\s\S]+?)%>/g
     };
 
-    // Provide the compiled source as a convenience for precompilation.
-    var argument = settings.variable || 'obj';
-    template.source = 'function(' + argument + '){\n' + source + '}';
+    // When customizing `templateSettings`, if you don't want to define an
+    // interpolation, evaluation or escaping regex, we need one that is
+    // guaranteed not to match.
+    var noMatch = /(.)^/;
 
-    return template;
-  };
+
+    // Certain characters need to be escaped so that they can be put into a
+    // string literal.
+    var escapes = {
+      "'":      "'",
+      '\\':     '\\',
+      '\r':     'r',
+      '\n':     'n',
+      '\t':     't',
+      '\u2028': 'u2028',
+      '\u2029': 'u2029'
+    };
+
+    var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
+
+
+    function template(text, data, settings) {
+        var render;
+        settings = objects.defaults({}, settings,templateSettings);
+
+        // Combine delimiters into one regular expression via alternation.
+        var matcher = RegExp([
+          (settings.escape || noMatch).source,
+          (settings.interpolate || noMatch).source,
+          (settings.evaluate || noMatch).source
+        ].join('|') + '|$', 'g');
+
+        // Compile the template source, escaping string literals appropriately.
+        var index = 0;
+        var source = "__p+='";
+        text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+          source += text.slice(index, offset)
+              .replace(escaper, function(match) { return '\\' + escapes[match]; });
+
+          if (escape) {
+            source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+          }
+          if (interpolate) {
+            source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+          }
+          if (evaluate) {
+            source += "';\n" + evaluate + "\n__p+='";
+          }
+          index = offset + match.length;
+          return match;
+        });
+        source += "';\n";
+
+        // If a variable is not specified, place data values in local scope.
+        if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+        source = "var __t,__p='',__j=Array.prototype.join," +
+          "print=function(){__p+=__j.call(arguments,'');};\n" +
+          source + 'return __p;\n';
+
+        try {
+          render = new Function(settings.variable || 'obj', '_', source);
+        } catch (e) {
+          e.source = source;
+          throw e;
+        }
+
+        if (data) {
+          return render(data,this)
+        }
+        var template = proxy(function(data) {
+          return render.call(this, data,this);
+        },this);
+
+        // Provide the compiled source as a convenience for precompilation.
+        var argument = settings.variable || 'obj';
+        template.source = 'function(' + argument + '){\n' + source + '}';
+
+        return template;
+    }
+
+
+    /**
+     * Creates a function that negates the result of the predicate `func`. The
+     * `func` predicate is invoked with the `this` binding and arguments of the
+     * created function.
+     * @category Function
+     * @param {Function} predicate The predicate to negate.
+     * @returns {Function} Returns the new negated function.
+     * @example
+     *
+     * function isEven(n) {
+     *   return n % 2 == 0
+     * }
+     *
+     * filter([1, 2, 3, 4, 5, 6], negate(isEven))
+     * // => [1, 3, 5]
+     */
+    function negate(predicate) {
+      if (typeof predicate !== 'function') {
+        throw new TypeError('Expected a function')
+      }
+      return function(...args) {
+        return !predicate.apply(this, args)
+      }
+    }
+
 
     return skylark.attach("langx.funcs",{
+        bind : proxy,
+        
         debounce: debounce,
 
         delegate: delegate,
 
         defer: defer,
+
+        negate: negate,
 
         noop : noop,
 
@@ -1458,9 +1542,6 @@ define('skylark-langx-async/Deferred',[
     "skylark-langx-objects"
 ],function(arrays,funcs,objects){
     "use strict";
-    
-    var  PGLISTENERS = Symbol ? Symbol() : '__pglisteners',
-         PGNOTIFIES = Symbol ? Symbol() : '__pgnotifies';
 
     var slice = Array.prototype.slice,
         proxy = funcs.proxy,
@@ -1492,15 +1573,15 @@ define('skylark-langx-async/Deferred',[
 
     var Deferred = function() {
         var self = this,
-            p = this.promise = new Promise(function(resolve, reject) {
+            p = this.promise = makePromise2(new Promise(function(resolve, reject) {
                 self._resolve = resolve;
                 self._reject = reject;
-            });
+            }));
 
-        wrapPromise(p,self);
+        //wrapPromise(p,self);
 
-        this[PGLISTENERS] = [];
-        this[PGNOTIFIES] = [];
+        //this[PGLISTENERS] = [];
+        //this[PGNOTIFIES] = [];
 
         //this.resolve = Deferred.prototype.resolve.bind(this);
         //this.reject = Deferred.prototype.reject.bind(this);
@@ -1508,52 +1589,97 @@ define('skylark-langx-async/Deferred',[
 
     };
 
-    function wrapPromise(p,d) {
-        var   added = {
-                state : function() {
-                    if (d.isResolved()) {
-                        return 'resolved';
+   
+    function makePromise2(promise) {
+        // Don't modify any promise that has been already modified.
+        if (promise.isResolved) return promise;
+
+        // Set initial state
+        var isPending = true;
+        var isRejected = false;
+        var isResolved = false;
+
+        // Observe the promise, saving the fulfillment in a closure scope.
+        var result = promise.then(
+            function(v) {
+                isResolved = true;
+                isPending = false;
+                return v; 
+            }, 
+            function(e) {
+                isRejected = true;
+                isPending = false;
+                throw e; 
+            }
+        );
+
+        result.isResolved = function() { return isResolved; };
+        result.isPending = function() { return isPending; };
+        result.isRejected = function() { return isRejected; };
+
+        result.state = function() {
+            if (isResolved) {
+                return 'resolved';
+            }
+            if (isRejected) {
+                return 'rejected';
+            }
+            return 'pending';
+        };
+
+        var notified = [],
+            listeners = [];
+
+          
+        result.then = function(onResolved,onRejected,onProgress) {
+            if (onProgress) {
+                this.progress(onProgress);
+            }
+            return makePromise2(Promise.prototype.then.call(this,
+                onResolved && function(args) {
+                    if (args && args.__ctx__ !== undefined) {
+                        return onResolved.apply(args.__ctx__,args);
+                    } else {
+                        return onResolved(args);
                     }
-                    if (d.isRejected()) {
-                        return 'rejected';
-                    }
-                    return 'pending';
                 },
-                then : function(onResolved,onRejected,onProgress) {
-                    if (onProgress) {
-                        this.progress(onProgress);
+                onRejected && function(args){
+                    if (args && args.__ctx__ !== undefined) {
+                        return onRejected.apply(args.__ctx__,args);
+                    } else {
+                        return onRejected(args);
                     }
-                    return wrapPromise(Promise.prototype.then.call(this,
-                            onResolved && function(args) {
-                                if (args && args.__ctx__ !== undefined) {
-                                    return onResolved.apply(args.__ctx__,args);
-                                } else {
-                                    return onResolved(args);
-                                }
-                            },
-                            onRejected && function(args){
-                                if (args && args.__ctx__ !== undefined) {
-                                    return onRejected.apply(args.__ctx__,args);
-                                } else {
-                                    return onRejected(args);
-                                }
-                            }));
-                },
-                progress : function(handler) {
-                    d[PGNOTIFIES].forEach(function (value) {
-                        handler(value);
-                    });
-                    d[PGLISTENERS].push(handler);
-                    return this;
                 }
+            ));
+        };
 
-            };
+        result.progress = function(handler) {
+            notified.forEach(function (value) {
+                handler(value);
+            });
+            listeners.push(handler);
+            return this;
+        };
 
-        added.pipe = added.then;
-        return mixin(p,added);
+        result.pipe = result.then;
 
+        result.notify = function(value) {
+            try {
+                notified.push(value);
+
+                return listeners.forEach(function (listener) {
+                    return listener(value);
+                });
+            } catch (error) {
+            this.reject(error);
+            }
+            return this;
+        };
+
+        return result;
     }
 
+ 
     Deferred.prototype.resolve = function(value) {
         var args = slice.call(arguments);
         return this.resolveWith(null,args);
@@ -1568,15 +1694,8 @@ define('skylark-langx-async/Deferred',[
     };
 
     Deferred.prototype.notify = function(value) {
-        try {
-            this[PGNOTIFIES].push(value);
-
-            return this[PGLISTENERS].forEach(function (listener) {
-                return listener(value);
-            });
-        } catch (error) {
-          this.reject(error);
-        }
+        var p = result(this,"promise");
+        p.notify(value);
         return this;
     };
 
@@ -1594,11 +1713,18 @@ define('skylark-langx-async/Deferred',[
     };
 
     Deferred.prototype.isResolved = function() {
-        return !!this._resolved;
+        var p = result(this,"promise");
+        return p.isResolved();
     };
 
     Deferred.prototype.isRejected = function() {
-        return !!this._rejected;
+        var p = result(this,"promise");
+        return p.isRejected();
+    };
+
+    Deferred.prototype.state = function() {
+        var p = result(this,"promise");
+        return p.state();
     };
 
     Deferred.prototype.then = function(callback, errback, progback) {
@@ -1617,14 +1743,22 @@ define('skylark-langx-async/Deferred',[
     };
 
 
+    Deferred.prototype.always  = function() {
+        var p = result(this,"promise");
+        p.always.apply(p,arguments);
+        return this;
+    };
+
     Deferred.prototype.done  = function() {
         var p = result(this,"promise");
-        return p.done.apply(p,arguments);
+        p.done.apply(p,arguments);
+        return this;
     };
 
     Deferred.prototype.fail = function(errback) {
         var p = result(this,"promise");
-        return p.fail(errback);
+        p.fail(errback);
+        return this;
     };
 
 
@@ -1636,7 +1770,7 @@ define('skylark-langx-async/Deferred',[
     };
 
     Deferred.first = function(array) {
-        return wrapPromise(Promise.race(array));
+        return makePromise2(Promise.race(array));
     };
 
 
@@ -1676,9 +1810,18 @@ define('skylark-langx-async/Deferred',[
 
     Deferred.immediate = Deferred.resolve;
 
+
+    Deferred.promise = function(callback) {
+        var d = new Deferred();
+
+        callback(d.resolve.bind(d),d.reject.bind(d),d.progress.bind(d));
+
+        return d.promise;
+    };
+
     return Deferred;
 });
-define('skylark-storages-diskfs/read',[
+define('skylark-io-diskfs/read',[
     "skylark-langx-async/Deferred",
     "./diskfs"
 ],function(Deferred, diskfs){
@@ -1722,7 +1865,7 @@ define('skylark-langx/Deferred',[
 ],function(Deferred){
     return Deferred;
 });
-define('skylark-storages-diskfs/readImage',[
+define('skylark-io-diskfs/readImage',[
     "skylark-langx/Deferred",
     "./diskfs",
     "./read"
@@ -1753,7 +1896,7 @@ define('skylark-storages-diskfs/readImage',[
 	return diskfs.readImage = readImage;
 
 });
-define('skylark-storages-diskfs/select',[
+define('skylark-io-diskfs/select',[
     "./diskfs"
 ],function(diskfs){
     var fileInput,
@@ -1818,7 +1961,7 @@ define('skylark-langx/arrays',[
 ],function(arrays){
   return arrays;
 });
- define('skylark-storages-diskfs/webentry',[
+ define('skylark-io-diskfs/webentry',[
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
     "./diskfs"
@@ -1873,7 +2016,7 @@ define('skylark-langx/arrays',[
 
     return diskfs.webentry = webentry;
 });
-define('skylark-storages-diskfs/main',[
+define('skylark-io-diskfs/main',[
 	"./diskfs",
 	"./download",
 	"./read",
@@ -1883,7 +2026,7 @@ define('skylark-storages-diskfs/main',[
 ],function(diskfs){
 	return diskfs;
 });
-define('skylark-storages-diskfs', ['skylark-storages-diskfs/main'], function (main) { return main; });
+define('skylark-io-diskfs', ['skylark-io-diskfs/main'], function (main) { return main; });
 
 
 },this);

@@ -1,5 +1,5 @@
 /**
- * skylark-storages-diskfs - The filer features enhancement for skylark utils.
+ * skylark-io-diskfs - The filer features enhancement for skylark utils.
  * @author Hudaokeji Co.,Ltd
  * @version v0.9.1
  * @link www.skylarkjs.org
@@ -75,7 +75,7 @@
   factory(define,require);
 
   if (!isAmd) {
-    var skylarkjs = require("skylark-langx/skylark");
+    var skylarkjs = require("skylark-langx-ns");
 
     if (isCmd) {
       module.exports = skylarkjs;
@@ -86,7 +86,7 @@
 
 })(function(define,require) {
 
-define('skylark-storages-diskfs/diskfs',[
+define('skylark-io-diskfs/diskfs',[
     "skylark-langx/skylark"
 ], function(skylark) {
 
@@ -109,7 +109,7 @@ define('skylark-storages-diskfs/diskfs',[
 
     return skylark.attach("storages.diskfs", diskfs);
 });
-define('skylark-storages-diskfs/download',[
+define('skylark-io-diskfs/download',[
     "skylark-langx/types",
     "./diskfs"
 ],function(types,diskfs){
@@ -135,7 +135,7 @@ define('skylark-storages-diskfs/download',[
 
 });
 
-define('skylark-storages-diskfs/read',[
+define('skylark-io-diskfs/read',[
     "skylark-langx-async/Deferred",
     "./diskfs"
 ],function(Deferred, diskfs){
@@ -174,7 +174,7 @@ define('skylark-storages-diskfs/read',[
     
 });
 
-define('skylark-storages-diskfs/readImage',[
+define('skylark-io-diskfs/readImage',[
     "skylark-langx/Deferred",
     "./diskfs",
     "./read"
@@ -205,7 +205,7 @@ define('skylark-storages-diskfs/readImage',[
 	return diskfs.readImage = readImage;
 
 });
-define('skylark-storages-diskfs/select',[
+define('skylark-io-diskfs/select',[
     "./diskfs"
 ],function(diskfs){
     var fileInput,
@@ -265,7 +265,7 @@ define('skylark-storages-diskfs/select',[
 });
 
 
- define('skylark-storages-diskfs/webentry',[
+ define('skylark-io-diskfs/webentry',[
     "skylark-langx/arrays",
     "skylark-langx/Deferred",
     "./diskfs"
@@ -320,7 +320,7 @@ define('skylark-storages-diskfs/select',[
 
     return diskfs.webentry = webentry;
 });
-define('skylark-storages-diskfs/main',[
+define('skylark-io-diskfs/main',[
 	"./diskfs",
 	"./download",
 	"./read",
@@ -330,8 +330,8 @@ define('skylark-storages-diskfs/main',[
 ],function(diskfs){
 	return diskfs;
 });
-define('skylark-storages-diskfs', ['skylark-storages-diskfs/main'], function (main) { return main; });
+define('skylark-io-diskfs', ['skylark-io-diskfs/main'], function (main) { return main; });
 
 
 },this);
-//# sourceMappingURL=sourcemaps/skylark-storages-diskfs.js.map
+//# sourceMappingURL=sourcemaps/skylark-io-diskfs.js.map

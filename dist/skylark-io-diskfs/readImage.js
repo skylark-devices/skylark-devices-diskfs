@@ -1,5 +1,5 @@
 /**
- * skylark-storages-diskfs - The filer features enhancement for skylark utils.
+ * skylark-io-diskfs - The filer features enhancement for skylark utils.
  * @author Hudaokeji Co.,Ltd
  * @version v0.9.1
  * @link www.skylarkjs.org
