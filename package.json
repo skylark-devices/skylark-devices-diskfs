@@ -1,5 +1,5 @@
 {
-  "name": "skylark-io-diskfs",
+  "name": "skylark-devices-diskfs",
   "version": "0.9.1",
   "description": "The filer features enhancement for skylark utils.",
   "main": "-",
@@ -10,7 +10,7 @@
   "homepage": "www.skylarkjs.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skylark-io/skylark-io-diskfs.git"
+    "url": "git+https://github.com/skylark-devices/skylark-devices-diskfs.git"
   },
   "keywords": [
     "skylark",
